@@ -9,6 +9,12 @@ export default function (server, options, done) {
   );
 
   server.get(
+    "/all",
+    { schema: "", attachValidation: true },
+    langController.getAllData
+  );
+
+  server.get(
     "/level/:lang",
     { schema: langSchema.getCategories, attachValidation: true },
     langController.getCategoryByLang

@@ -135,3 +135,38 @@ export const getCategories = {
     },
   },
 };
+
+export const getAllData = {
+  summary: "Get all data",
+  response: {
+    401: {
+      type: "object",
+      properties: {
+        success: { type: "boolean" },
+        msg: { type: "string" },
+      },
+    },
+    201: {
+      type: "object",
+      properties: {
+        success: { type: "boolean" },
+        msg: { type: "string" },
+        data: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              langauge: { type: "string" },
+              levels: {
+                type: "array",
+                items: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};

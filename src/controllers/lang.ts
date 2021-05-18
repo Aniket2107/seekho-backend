@@ -92,6 +92,19 @@ export const getLanguages = async (
   reply.code(201).send({ success: true, msg: "Data found", data: languages });
 };
 
+export const getAllData = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  const langData = await Language.find();
+
+  if (!langData || langData.length === 0) {
+    return reply.code(404).send({ success: false, msg: "No data found" });
+  }
+
+  reply.code(201).send({ success: true, msg: "Data found", data: langData });
+};
+
 export const getCategoryByLang = async (
   request: FastifyRequest<{ Params: { lang: string } }>,
   reply: FastifyReply
