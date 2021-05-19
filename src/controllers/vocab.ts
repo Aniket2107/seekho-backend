@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { uploads } from "../utils/cloudinary";
+import { cloud } from "../utils/cloudinary";
 import Vocab from "../models/vocabModel";
 import { params, vocabBodyType } from "../types";
+import { UrlWithStringQuery } from "url";
 
 export const getVocabById = async (
   request: FastifyRequest<{ Params: params }>,
@@ -57,23 +58,39 @@ export const addVocab = async (
     });
   }
 
-  const data = await request.files;
+  const data = request.files;
 
-  const uploader = async (path) => await uploads(path, "Home");
+  // const uploads = (file, folder) => {
+  //   return new Promise((resolve) => {
+  //     cloud.uploader.upload(file, function (error, result) {
+  //       // console.log("error=>", error);
+  //       // console.log("result=>", result);
+  //       resolve(result.url);
+  //     });
+  //   });
+  // };
+
+  // const uploader = async (path: string) => await uploads(path, "Home");
 
   let audioUrl;
   let imageUrl;
 
-  const path1 = data["image"][0].filename;
-  imageUrl = await uploader(path1);
+  const path1 = data["image"][0].path;
+  imageUrl = await cloud.uploader.upload(path1);
 
-  const path2 = data["audio"][0].filename;
-  audioUrl = await uploader(path2);
+  const path2 = data["audio"][0].path;
+  audioUrl = await cloud.uploader.upload(path2, { resource_type: "video" });
+
+  if (!imageUrl || !audioUrl) {
+    return reply
+      .code(500)
+      .send({ success: false, msg: "Something went wrong, Try again" });
+  }
 
   const newVocab = new Vocab({
     ...request.body,
-    image: imageUrl,
-    audio: audioUrl,
+    image: imageUrl.url,
+    audio: audioUrl.url,
   });
   newVocab.save((err, vocab) => {
     if (err || !vocab) {
@@ -84,7 +101,9 @@ export const addVocab = async (
       });
     }
 
-    reply.code(200).send({ success: true, msg: "Vocab added", data: vocab });
+    return reply
+      .code(200)
+      .send({ success: true, msg: "Vocab added", data: vocab });
   });
 };
 

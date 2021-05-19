@@ -101,21 +101,18 @@ export const listVocabSchemaById = {
       properties: {
         success: { type: "boolean" },
         data: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              _id: { type: "string" },
-              language: { type: "string" },
-              level: { type: "string" },
-              image: { type: "string" },
-              audio: { type: "string" },
-              hindiInHindi: { type: "string" },
-              englishInEnglish: { type: "string" },
-              languageInHindi: { type: "string" },
-              languageInEnglish: { type: "string" },
-              languageInLanguage: { type: "string" },
-            },
+          type: "object",
+          properties: {
+            _id: { type: "string" },
+            language: { type: "string" },
+            level: { type: "string" },
+            image: { type: "string" },
+            audio: { type: "string" },
+            hindiInHindi: { type: "string" },
+            englishInEnglish: { type: "string" },
+            languageInHindi: { type: "string" },
+            languageInEnglish: { type: "string" },
+            languageInLanguage: { type: "string" },
           },
         },
       },

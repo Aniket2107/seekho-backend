@@ -8,19 +8,4 @@ cloud.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-const uploads = (file, folder) => {
-  return new Promise((resolve) => {
-    cloud.uploader.upload(
-      file,
-      {
-        resource_type: "auto",
-        folder: folder,
-      },
-      (error, result) => {
-        resolve(result.url);
-      }
-    );
-  });
-};
-
-export { cloud, uploads };
+export { cloud };

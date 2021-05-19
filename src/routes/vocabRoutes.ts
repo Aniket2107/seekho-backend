@@ -34,11 +34,7 @@ const checkFileType = (file, cb) => {
       cb(null, false);
     }
   } else if (file.fieldname === "audio") {
-    if (
-      file.mimetype === "audio/mp3" ||
-      file.mimetype === "audio/mpeg" ||
-      file.mimetype === "audio/"
-    ) {
+    if (file.mimetype === "audio/mpeg") {
       cb(null, true);
     } else {
       cb(null, false);
@@ -76,7 +72,7 @@ export default function VocabHandler(server: FastifyInstance, options, done) {
     "/",
     {
       // schema: vocabSchema.addVocabSchema,
-      attachValidation: true,
+      // attachValidation: true,
       preHandler: upload.fields([
         { name: "image", maxCount: 1 },
         { name: "audio", maxCount: 1 },

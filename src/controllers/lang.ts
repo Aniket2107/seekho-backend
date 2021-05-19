@@ -18,27 +18,29 @@ export const addLanguage = async (
     language: request.body.language,
   });
 
-  if (Object.keys(langExists).length) {
+  if (langExists) {
     return reply
       .code(400)
       .send({ success: false, msg: "Language already exists" });
   }
 
   const payload = {
-    langage: request.body.language,
+    language: request.body.language,
     levels: [],
   };
 
-  let newLanguage = new Language(payload);
-  newLanguage.save((err, lang) => {
-    if (err || !lang) {
-      return reply
-        .code(500)
-        .send({ success: false, msg: "Something went wrong, Try again" });
-    }
+  let newLang = new Language(payload);
+  let lang = await newLang.save();
 
-    reply.code(200).send({ success: true, msg: "Language added", data: lang });
-  });
+  console.log(lang);
+
+  if (!lang) {
+    return reply
+      .code(500)
+      .send({ success: false, msg: "Something went wrong, Try again" });
+  }
+
+  reply.code(200).send({ success: true, msg: "Language added", data: lang });
 };
 
 export const addCategory = async (
