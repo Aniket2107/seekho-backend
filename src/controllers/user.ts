@@ -31,7 +31,7 @@ export const getUserData = async (
   if (request.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
     const user = await User.findOne({ _id: request.params.userId });
 
-    if (!Object.keys(user).length) {
+    if (!user || !Object.keys(user).length) {
       return reply.code(404).send({ success: false, msg: "User not found" });
     }
 
@@ -39,4 +39,17 @@ export const getUserData = async (
   } else {
     return reply.code(500).send({ success: false, msg: "Enter valid userId" });
   }
+};
+
+export const getAllUsers = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  const user = await User.find();
+
+  if (!user || user.length === 0) {
+    return reply.code(404).send({ success: false, msg: "No user found" });
+  }
+
+  reply.code(201).send({ success: true, data: user });
 };

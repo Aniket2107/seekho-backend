@@ -160,3 +160,11 @@ export interface addCat {
   language: string;
   newLevel: string;
 }
+
+export interface feedType {
+  name: string;
+  email: string;
+  contact: string;
+  subject: string;
+  message: string;
+}

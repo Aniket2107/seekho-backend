@@ -12,6 +12,8 @@ import langRoutes from "./routes/languageRoutes";
 import algoRoutes from "./routes/algoRoutes";
 import questionRoutes from "./routes/questionRoutes";
 import resultRoutes from "./routes/resultRoutes";
+import userRoutes from "./routes/userRoutes";
+import feedbackRoutes from "./routes/feedbackRoutes";
 
 require("./utils/db");
 
@@ -34,6 +36,8 @@ function createServer() {
   server.register(algoRoutes, { prefix: "/api/v1/algo" });
   server.register(questionRoutes, { prefix: "/api/v1/quiz" });
   server.register(resultRoutes, { prefix: "/api/v1/result" });
+  server.register(userRoutes, { prefix: "/api/v1/user" });
+  server.register(feedbackRoutes, { prefix: "/api/v1/feedbacks" });
 
   server.setErrorHandler((error, req, res) => {
     req.log.error(error.toString());

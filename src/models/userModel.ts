@@ -36,6 +36,8 @@ const userSchema = new Schema(
     whyLearning: String,
     knownThrough: String,
     dailyGoal: Number,
+    knownLang: String,
+    learningLang: [String],
   },
   { timestamps: true }
 );

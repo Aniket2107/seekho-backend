@@ -1,3 +1,8 @@
+/**
+ * @author Aniket Habib
+ * @description Leitners Algo Controllers
+ */
+
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import Leitner from "../models/algoModel";
