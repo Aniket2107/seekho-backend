@@ -23,24 +23,22 @@ export const updateUserPoints = async (request, reply, done) => {
 
       leitnerData.totalWordsLearned = mastered;
       await leitnerData.updateOne(leitnerData);
-    }
 
-    const userData = await User.findOne({ _id: request.params.userId });
+      const userData = await User.findOne({ _id: request.params.userId });
 
-    let payload: Array<{
-      language: string;
-      coins: number;
-    }> = [];
+      let payload: Array<{
+        language: string;
+        coins: number;
+      }> = [];
 
-    leitnerData.totalWordsLearned.map((el) => {
-      let temp = {
-        language: el.language,
-        coins: el.totalMastered,
-      };
-      payload.push(temp);
-    });
+      leitnerData.totalWordsLearned.map((el) => {
+        let temp = {
+          language: el.language,
+          coins: el.totalMastered,
+        };
+        payload.push(temp);
+      });
 
-    if (userData) {
       userData.points = payload;
 
       await userData.updateOne(userData);
