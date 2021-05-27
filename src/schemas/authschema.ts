@@ -29,17 +29,18 @@ export const loginSchema = {
         success: { type: "boolean" },
         msg: { type: "string" },
         data: {
-          type: "object",
-          properties: {
-            token: { type: "string" },
-            user: {
-              type: "object",
-              properties: {
-                _id: { type: "string" },
-                email: { type: "string" },
-              },
-            },
-          },
+          type: "string",
+          // type: "object",
+          // properties: {
+          //   token: { type: "string" },
+          //   user: {
+          //     type: "object",
+          //     properties: {
+          //       _id: { type: "string" },
+          //       email: { type: "string" },
+          //     },
+          //   },
+          // },
         },
       },
     },
@@ -71,11 +72,12 @@ export const registerSchema = {
         success: { type: "boolean" },
         msg: { type: "string" },
         data: {
-          type: "object",
-          properties: {
-            email: { type: "string" },
-            name: { type: "string" },
-          },
+          type: "string",
+          // type: "object",
+          // properties: {
+          //   email: { type: "string" },
+          //   name: { type: "string" },
+          // },
         },
       },
     },

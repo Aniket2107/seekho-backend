@@ -15,6 +15,8 @@ export interface IUser {
   whyLearning: string;
   knownThrough: string;
   dailyGoal: number;
+  learningLang: string[];
+  knownLang: string;
 }
 
 export interface Login {

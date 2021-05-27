@@ -28,14 +28,16 @@ export const login = async (
       .send({ success: false, msg: "Password does not match" });
   }
 
-  const token = jwt.sign(
-    { userId: user._id, isAdmin: user.isAdmin },
+  const token = await jwt.sign(
+    {
+      userId: user._id,
+      knownLang: user.knownLang,
+      learningLang: user.learningLang,
+    },
     process.env.SECRET,
     { expiresIn: "1w" }
   );
-  reply
-    .code(200)
-    .send({ success: true, msg: "User logged in", data: { user, token } });
+  reply.code(200).send({ success: true, msg: "User logged in", data: token });
 };
 
 export const register = async (
@@ -66,12 +68,24 @@ export const register = async (
   });
   newUser.save((err, user) => {
     if (err || !user) {
-      reply
+      return reply
         .code(400)
         .send({ success: false, msg: "Something went wrong, Try again" });
     }
 
-    reply.code(200).send({ success: true, msg: "User registed", data: user });
+    const token = jwt.sign(
+      {
+        userId: user._id,
+        learningLang: user.learningLang,
+        knownLang: user.knownLang,
+      },
+      process.env.SECRET,
+      { expiresIn: "1w" }
+    );
+
+    return reply
+      .code(200)
+      .send({ success: true, msg: "User registered & logged in", data: token });
   });
 };
 

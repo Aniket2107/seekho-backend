@@ -18,7 +18,7 @@ import feedbackRoutes from "./routes/feedbackRoutes";
 require("./utils/db");
 
 function createServer() {
-  const server = fastify({ logger: true });
+  const server = fastify();
 
   server.register(require("fastify-cors"), {
     origin: true,
