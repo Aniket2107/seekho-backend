@@ -12,6 +12,7 @@ import {
   postLeitner,
   getLeitnerDataParams,
   vocabType,
+  leitPgLearn,
 } from "../types";
 
 export const getUserProgress = async (
@@ -136,6 +137,47 @@ export const getLeitnerData = async (
       }
     }
     return reply.code(404).send({ success: false, msg: "Data not found.." });
+  } else {
+    return reply.code(500).send({ success: false, msg: "Enter valid userId" });
+  }
+};
+
+export const getLeitnerProgressForLearn = async (
+  request: FastifyRequest<{ Params: leitPgLearn }>,
+  reply: FastifyReply
+) => {
+  if (request.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
+    const leitnerData = await Leitner.findOne({
+      userId: request.params.userId,
+    });
+
+    if (leitnerData) {
+      const langData = await leitnerData.data.find(
+        (lg) => lg.language === request.params.lang
+      );
+      if (langData) {
+        const progressData: Array<{
+          level: string;
+          progress: number;
+        }> = [];
+
+        langData.levelData.map((lvl) => {
+          const level = lvl.level;
+          const total =
+            lvl.learning.length + lvl.reviewing.length + lvl.mastered.length;
+          const masteredLength = lvl.mastered.length;
+          const levelProgress = Math.floor((masteredLength / total) * 100);
+
+          progressData.push({
+            level,
+            progress: levelProgress,
+          });
+        });
+
+        return reply.code(200).send({ success: true, data: progressData });
+      }
+    }
+    return reply.code(400).send({ success: false, msg: "Data not found" });
   } else {
     return reply.code(500).send({ success: false, msg: "Enter valid userId" });
   }

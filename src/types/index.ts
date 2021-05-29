@@ -81,6 +81,11 @@ export interface ILeitner {
   }>;
 }
 
+export interface leitPgLearn {
+  userId: string;
+  lang: string;
+}
+
 export interface initLeitner {
   userId: string;
   language: string;
