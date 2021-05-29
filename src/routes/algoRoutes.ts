@@ -20,6 +20,11 @@ export default function (
     algoController.getLeitnerData
   );
 
+  server.get(
+    "/learnData/:userId/:lang",
+    algoController.getLeitnerProgressForLearn
+  );
+
   server.post(
     "/initialize",
     { schema: algoSchema.initSchema, attachValidation: true },
