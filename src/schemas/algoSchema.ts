@@ -132,20 +132,7 @@ export const getDataSchema = {
             learningWords: { type: "number" },
             reviewingWords: { type: "number" },
             masteredWords: { type: "number" },
-            wordData: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  _id: { type: "string" },
-                  language: { type: "string" },
-                  hindiInHindi: { type: "string" },
-                  englishInEnglish: { type: "string" },
-                  languageInHindi: { type: "string" },
-                  languageInEnglish: { type: "string" },
-                },
-              },
-            },
+            total: { type: "number" },
           },
         },
       },
@@ -195,6 +182,67 @@ export const getProgressSchema = {
               date: { type: "string", format: "date" },
               language: { type: "string" },
               wordsLearned: { type: "number" },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const userVocabSchema = {
+  summary: "User Vocab schema",
+  params: {
+    type: "object",
+    properties: {
+      userId: { type: "string" },
+      language: { type: "string" },
+      level: { type: "string" },
+    },
+    required: ["userId", "level", "language"],
+  },
+  response: {
+    500: {
+      type: "object",
+      properties: {
+        success: { type: "boolean" },
+        msg: { type: "string" },
+      },
+    },
+    400: {
+      type: "object",
+      properties: {
+        success: { type: "boolean" },
+        msg: { type: "string" },
+      },
+    },
+    404: {
+      type: "object",
+      properties: {
+        success: { type: "boolean" },
+        msg: { type: "string" },
+      },
+    },
+    200: {
+      type: "object",
+      properties: {
+        success: { type: "boolean" },
+        msg: { type: "string" },
+        data: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              _id: { type: "string" },
+              language: { type: "string" },
+              level: { type: "string" },
+              image: { type: "string" },
+              audio: { type: "string" },
+              hindiInHindi: { type: "string" },
+              englishInEnglish: { type: "string" },
+              languageInHindi: { type: "string" },
+              languageInEnglish: { type: "string" },
+              languageInLanguage: { type: "string" },
             },
           },
         },

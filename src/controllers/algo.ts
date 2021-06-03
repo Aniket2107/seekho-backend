@@ -41,7 +41,7 @@ export const getUserProgress = async (
   }
 };
 
-export const getLeitnerData = async (
+export const getLeitnerVocab = async (
   request: FastifyRequest<{ Params: getLeitnerDataParams }>,
   reply: FastifyReply
 ) => {
@@ -112,31 +112,68 @@ export const getLeitnerData = async (
             });
           }
 
-          if (wordData.length > 0) {
-            let total =
-              levelData.learning.length +
-              levelData.reviewing.length +
-              levelData.mastered.length;
-            let learningPer = (levelData.learning.length / total) * 100;
-            let reviewingPer = (levelData.reviewing.length / total) * 100;
-            let masteredPer = (levelData.mastered.length / total) * 100;
-
-            const payload = {
-              wordData,
-              learningPer,
-              reviewingPer,
-              masteredPer,
-              learningWords: levelData.learning.length,
-              reviewingWords: levelData.reviewing.length,
-              masteredWords: levelData.mastered.length,
-            };
-
-            return reply.code(200).send({ success: true, data: payload });
-          }
+          return reply.code(200).send({ success: true, data: wordData });
         }
       }
     }
-    return reply.code(404).send({ success: false, msg: "Data not found.." });
+
+    return reply.code(400).send({ success: false, msg: "No data found" });
+  } else {
+    return reply.code(500).send({ success: false, msg: "Enter valid userId" });
+  }
+};
+
+export const getLeitnerData = async (
+  request: FastifyRequest<{ Params: getLeitnerDataParams }>,
+  reply: FastifyReply
+) => {
+  if (request.validationError) {
+    return reply.code(400).send({
+      success: false,
+      msg: request.validationError.validation[0].message,
+    });
+  }
+
+  if (request.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
+    const leitnerData = await Leitner.findOne({
+      userId: request.params.userId,
+    });
+
+    if (leitnerData) {
+      const languageData = leitnerData.data.find(
+        (el) => el.language === request.params.language
+      );
+
+      if (languageData) {
+        const levelData = languageData.levelData.find(
+          (el) => el.level === request.params.level
+        );
+
+        if (levelData) {
+          let total =
+            levelData.learning.length +
+            levelData.reviewing.length +
+            levelData.mastered.length;
+          let learningPer = (levelData.learning.length / total) * 100;
+          let reviewingPer = (levelData.reviewing.length / total) * 100;
+          let masteredPer = (levelData.mastered.length / total) * 100;
+
+          const payload = {
+            learningPer,
+            reviewingPer,
+            masteredPer,
+            total,
+            learningWords: levelData.learning.length,
+            reviewingWords: levelData.reviewing.length,
+            masteredWords: levelData.mastered.length,
+          };
+
+          return reply.code(200).send({ success: true, data: payload });
+        }
+      }
+    }
+
+    return reply.code(400).send({ success: false, msg: "Data not found.." });
   } else {
     return reply.code(500).send({ success: false, msg: "Enter valid userId" });
   }

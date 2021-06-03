@@ -63,6 +63,12 @@ export default function VocabHandler(server: FastifyInstance, options, done) {
   );
 
   server.get(
+    "/lang-level/:language/:level",
+    { schema: vocabSchema.listVocabSchemaByLanguage, attachValidation: true },
+    vocabController.getVocabByLanguageAndLevel
+  );
+
+  server.get(
     "/id/:id",
     { schema: vocabSchema.listVocabSchemaById, attachValidation: true },
     vocabController.getVocabById

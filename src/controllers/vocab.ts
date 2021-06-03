@@ -47,6 +47,22 @@ export const getVocabByLanguage = async (
   reply.code(200).send({ success: true, data: vocabList });
 };
 
+export const getVocabByLanguageAndLevel = async (
+  request: FastifyRequest<{ Params: { language: string; level: string } }>,
+  reply: FastifyReply
+) => {
+  const vocabList = await Vocab.find({
+    language: request.params.language,
+    level: request.params.level,
+  });
+
+  if (!vocabList || vocabList.length === 0) {
+    return reply.code(404).send({ success: false, msg: "Vocab not found" });
+  }
+
+  reply.code(200).send({ success: true, data: vocabList });
+};
+
 export const addVocab = async (
   request: FastifyRequest & { files: any; body: vocabBodyType },
   reply: FastifyReply
