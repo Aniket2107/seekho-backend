@@ -175,3 +175,13 @@ export interface feedType {
   subject: string;
   message: string;
 }
+
+export type collectionType = {
+  userId: string;
+  collection: string[];
+};
+
+export type addCollectionType = {
+  userId: string;
+  vocabId: string;
+};
