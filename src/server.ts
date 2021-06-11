@@ -14,6 +14,7 @@ import questionRoutes from "./routes/questionRoutes";
 import resultRoutes from "./routes/resultRoutes";
 import userRoutes from "./routes/userRoutes";
 import feedbackRoutes from "./routes/feedbackRoutes";
+import collectionRoutes from "./routes/collectionRoute";
 
 require("./utils/db");
 
@@ -38,6 +39,7 @@ function createServer() {
   server.register(resultRoutes, { prefix: "/api/v1/result" });
   server.register(userRoutes, { prefix: "/api/v1/user" });
   server.register(feedbackRoutes, { prefix: "/api/v1/feedbacks" });
+  server.register(collectionRoutes, { prefix: "/api/v1/collection" });
 
   server.setErrorHandler((error, req, res) => {
     req.log.error(error.toString());

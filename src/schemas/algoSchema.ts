@@ -133,6 +133,18 @@ export const getDataSchema = {
             reviewingWords: { type: "number" },
             masteredWords: { type: "number" },
             total: { type: "number" },
+            learning: {
+              type: "array",
+              items: { type: "string" },
+            },
+            reviewing: {
+              type: "array",
+              items: { type: "string" },
+            },
+            mastered: {
+              type: "array",
+              items: { type: "string" },
+            },
           },
         },
       },

@@ -166,6 +166,9 @@ export const getLeitnerData = async (
             learningWords: levelData.learning.length,
             reviewingWords: levelData.reviewing.length,
             masteredWords: levelData.mastered.length,
+            learning: levelData.learning,
+            reviewing: levelData.reviewing,
+            mastered: levelData.mastered,
           };
 
           return reply.code(200).send({ success: true, data: payload });

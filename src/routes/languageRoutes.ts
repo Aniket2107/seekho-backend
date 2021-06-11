@@ -28,5 +28,7 @@ export default function (server, options, done) {
 
   server.post("/level", langController.addCategory);
 
+  server.get("/ranking/:lang", langController.getLangPoints);
+
   done();
 }

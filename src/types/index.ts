@@ -178,7 +178,7 @@ export interface feedType {
 
 export type collectionType = {
   userId: string;
-  collection: string[];
+  vocabCollection: string[];
 };
 
 export type addCollectionType = {

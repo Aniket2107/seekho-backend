@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { addCat } from "../types";
 
 import Language from "../models/langModel";
+import User from "../models/userModel";
 
 export const addLanguage = async (
   request: FastifyRequest<{ Body: { language: string } }>,
@@ -130,4 +131,46 @@ export const getCategoryByLang = async (
   });
 
   reply.code(201).send({ success: true, msg: "Data found", data: categories });
+};
+
+export const getLangPoints = async (
+  request: FastifyRequest<{ Params: { lang: string } }>,
+  reply: FastifyReply
+) => {
+  if (!request.params.lang) {
+    return reply.code(400).send({ success: false, msg: "Enter language" });
+  }
+
+  const users = await User.find();
+
+  let ranking = [];
+
+  function compare(a, b) {
+    const coinA = a.points;
+    const coinB = b.points;
+
+    let comparison = 0;
+    if (coinA > coinB) {
+      comparison = 1;
+    } else if (coinA < coinB) {
+      comparison = -1;
+    }
+    return comparison;
+  }
+
+  if (users && users.length > 0) {
+    users.map((us) => {
+      let langEx = us.points.find((lg) => lg.language === request.params.lang);
+
+      if (langEx) {
+        ranking.push({ name: us.name, email: us.email, points: langEx.coins });
+      }
+    });
+
+    //Before sending just sort the values
+    ranking.sort(compare);
+
+    reply.code(200).send({ success: true, data: ranking });
+  }
+  reply.code(500).send({ success: false, msg: "No data available" });
 };

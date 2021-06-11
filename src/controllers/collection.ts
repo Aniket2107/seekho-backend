@@ -4,7 +4,7 @@ import Collection from "../models/collectionModel";
 import { addCollectionType } from "../types";
 
 export const getCollection = async (
-  request: FastifyRequest<{ Body: addCollectionType }>,
+  request: FastifyRequest<{ Params: { userId: string } }>,
   reply: FastifyReply
 ) => {
   if (request.validationError) {
@@ -14,12 +14,12 @@ export const getCollection = async (
     });
   }
 
-  if (request.body.userId.match(/^[0-9a-fA-F]{24}$/)) {
+  if (request.params.userId.match(/^[0-9a-fA-F]{24}$/)) {
     const userExists = await Collection.findOne({
-      userId: request.body.userId,
-    }).populate("Collection");
+      userId: request.params.userId,
+    }).populate("vocabCollection");
 
-    if (userExists) {
+    if (userExists && userExists.vocabCollection.length > 0) {
       reply.code(200).send({ success: true, data: userExists });
     } else {
       return reply
@@ -51,7 +51,7 @@ export const addCollection = async (
     });
 
     if (userExists) {
-      const vocabExists = await userExists.collection.find(
+      const vocabExists = await userExists.vocabCollection.find(
         (el) => el == request.body.vocabId
       );
 
@@ -61,13 +61,18 @@ export const addCollection = async (
           .send({ success: false, msg: "Vocab already exists" });
       }
 
-      userExists.collection.push(request.body.vocabId);
+      userExists.vocabCollection.push(
+        ...userExists.vocabCollection,
+        request.body.vocabId
+      );
 
       await userExists.updateOne(userExists);
+
+      return reply.code(200).send({ success: true, msg: "Vocab pushed" });
     } else {
       const newCollection = new Collection({
         userId: request.body.userId,
-        collection: [request.body.vocabId],
+        vocabCollection: [request.body.vocabId],
       });
 
       newCollection.save((err, col) => {
@@ -82,6 +87,45 @@ export const addCollection = async (
           .send({ success: true, msg: "Vocab added to collection" });
       });
     }
+  } else {
+    return reply
+      .code(500)
+      .send({ success: false, msg: "Enter valid objectId" });
+  }
+};
+
+export const deleteCollection = async (
+  request: FastifyRequest<{ Params: addCollectionType }>,
+  reply: FastifyReply
+) => {
+  if (request.validationError) {
+    return reply.code(400).send({
+      success: false,
+      msg: request.validationError.validation[0].message,
+    });
+  }
+
+  if (
+    request.params.userId.match(/^[0-9a-fA-F]{24}$/) &&
+    request.params.vocabId.match(/^[0-9a-fA-F]{24}$/)
+  ) {
+    const userExists = await Collection.findOne({
+      userId: request.params.userId,
+    });
+
+    if (userExists) {
+      const vocab = userExists.vocabCollection.filter(
+        (cl) => cl != request.params.vocabId
+      );
+
+      userExists.vocabCollection = vocab;
+
+      await userExists.updateOne(userExists);
+
+      return reply.code(200).send({ success: true, msg: "vocab deleted" });
+    }
+
+    return reply.code(404).send({ success: false, msg: "NO data found" });
   } else {
     return reply
       .code(500)
