@@ -61,10 +61,7 @@ export const addCollection = async (
           .send({ success: false, msg: "Vocab already exists" });
       }
 
-      userExists.vocabCollection.push(
-        ...userExists.vocabCollection,
-        request.body.vocabId
-      );
+      userExists.vocabCollection.push(request.body.vocabId);
 
       await userExists.updateOne(userExists);
 
